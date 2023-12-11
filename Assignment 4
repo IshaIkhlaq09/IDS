@@ -1,1 +1,165 @@
+# 12/11/23
+# CSC461 – Assignment3 – Machine Learning
+# Isha Ikhlaq
+# Sp20-BSE-009
 
+Q#1:
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+import pandas as pd
+
+# Define the sentences
+sentences = [
+    "data science is one of the most important courses in computer science",
+    "this is one of the best data science courses",
+    "the data scientists perform data analysis"
+]
+
+# Step 1: Bag of Words (BoW)
+vectorizer_bow = CountVectorizer()
+bow_matrix = vectorizer_bow.fit_transform(sentences)
+
+# Step 2: Term Frequency (TF)
+vectorizer_tf = CountVectorizer()
+tf_matrix = vectorizer_tf.fit_transform(sentences)
+
+# Step 3: Inverse Document Frequency (IDF)
+vectorizer_idf = TfidfVectorizer(use_idf=True)
+idf_matrix = vectorizer_idf.fit_transform(sentences)
+
+# Step 4: TF-IDF
+vectorizer_tfidf = TfidfVectorizer()
+tfidf_matrix = vectorizer_tfidf.fit_transform(sentences)
+
+# Get the feature names (terms)
+terms = vectorizer_bow.get_feature_names_out()
+
+# Convert the matrices to DataFrames for better visualization
+df_bow = pd.DataFrame(bow_matrix.toarray(), columns=terms)
+df_tf = pd.DataFrame(tf_matrix.toarray(), columns=terms)
+df_idf = pd.DataFrame(idf_matrix.toarray(), columns=terms)
+df_tfidf = pd.DataFrame(tfidf_matrix.toarray(), columns=terms)
+
+# Display the DataFrames
+print("Bag of Words (BoW) Matrix:")
+print(df_bow)
+
+print("\nTerm Frequency (TF) Matrix:")
+print(df_tf)
+
+print("\nInverse Document Frequency (IDF) Matrix:")
+print(df_idf)
+
+print("\nTF-IDF Matrix:")
+print(df_tfidf)
+
+Bag of Words (BoW) Matrix:
+   analysis  best  computer  courses  data  important  in  is  most  of  one  \
+0         0     0         1        1     1          1   1   1     1   1    1   
+1         0     1         0        1     1          0   0   1     0   1    1   
+2         1     0         0        0     2          0   0   0     0   0    0   
+
+   perform  science  scientists  the  this  
+0        0        2           0    1     0  
+1        0        1           0    1     1  
+2        1        0           1    1     0  
+
+Term Frequency (TF) Matrix:
+   analysis  best  computer  courses  data  important  in  is  most  of  one  \
+0         0     0         1        1     1          1   1   1     1   1    1   
+1         0     1         0        1     1          0   0   1     0   1    1   
+2         1     0         0        0     2          0   0   0     0   0    0   
+
+   perform  science  scientists  the  this  
+0        0        2           0    1     0  
+1        0        1           0    1     1  
+2        1        0           1    1     0  
+
+Inverse Document Frequency (IDF) Matrix:
+   analysis      best  computer   courses      data  important        in  \
+0  0.000000  0.000000  0.327476  0.249054  0.193412   0.327476  0.327476   
+...
+        the      this  
+0  0.193412  0.000000  
+1  0.249812  0.422968  
+2  0.271161  0.000000  
+Output is truncated. View as a scrollable element or open in a text editor.
+
+Q#2
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity, manhattan_distances, euclidean_distances
+
+# Define the sentences
+sentences = [
+    "data science is one of the most important courses in computer science",
+    "this is one of the best data science courses",
+    "the data scientists perform data analysis"
+]
+
+# Create a TF-IDF vectorizer
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform(sentences)
+
+# Compute cosine similarity
+cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+
+# Compute Manhattan distance
+manhattan_dist = manhattan_distances(tfidf_matrix)
+
+# Compute Euclidean distance
+euclidean_dist = euclidean_distances(tfidf_matrix)
+
+# Display the results
+print("Cosine Similarity:")
+print(cosine_sim)
+print("\nManhattan Distance:")
+print(manhattan_dist)
+print("\nEuclidean Distance:")
+print(euclidean_dist)
+
+Output:
+Bag of Words (BoW) Matrix:
+   analysis  best  computer  courses  data  important  in  is  most  of  one  \
+0         0     0         1        1     1          1   1   1     1   1    1   
+1         0     1         0        1     1          0   0   1     0   1    1   
+2         1     0         0        0     2          0   0   0     0   0    0   
+
+   perform  science  scientists  the  this  
+0        0        2           0    1     0  
+1        0        1           0    1     1  
+2        1        0           1    1     0  
+
+Term Frequency (TF) Matrix:
+   analysis  best  computer  courses  data  important  in  is  most  of  one  \
+0         0     0         1        1     1          1   1   1     1   1    1   
+1         0     1         0        1     1          0   0   1     0   1    1   
+2         1     0         0        0     2          0   0   0     0   0    0   
+
+   perform  science  scientists  the  this  
+0        0        2           0    1     0  
+1        0        1           0    1     1  
+2        1        0           1    1     0  
+
+Inverse Document Frequency (IDF) Matrix:
+   analysis      best  computer   courses      data  important        in  \
+0  0.000000  0.000000  0.327476  0.249054  0.193412   0.327476  0.327476   
+...
+        the      this  
+0  0.193412  0.000000  
+1  0.249812  0.422968  
+2  0.271161  0.000000  
+Output is truncated. View as a scrollable element or open in a text editor. Adjust cell output settings...
+Cosine Similarity:
+[[1.         0.57732419 0.15733751]
+ [0.57732419 1.         0.20321737]
+ [0.15733751 0.20321737 1.        ]]
+
+Manhattan Distance:
+[[0.         2.73556468 4.60822682]
+ [2.73556468 0.         4.14553005]
+ [4.60822682 4.14553005 0.        ]]
+
+Euclidean Distance:
+[[0.         0.91943005 1.29820067]
+ [0.91943005 0.         1.26236494]
+ [1.29820067 1.26236494 0.        ]]
